@@ -1,0 +1,53 @@
+---
+kind: pipeline
+type: docker
+name: publish_website
+
+trigger:
+  event:
+    push
+  branch:
+  - master
+
+volumes:                                                                                                │
+- name: gh-pages
+  temp: {}    
+  
+steps:
+- name: pull_submodules
+  image: alpine/git
+  commands:
+  - git submodule update --init --recursive --remote
+
+- name: prepare_gh-pages
+  image: alpine/git
+  volumes:                                                                                              │
+  - name: gh-pages
+    path: /gh-pages
+  commands:
+  - git clone -b gh-pages --single-branch git@github.com:zaggash/tp-iut-docker.git /gh-pages
+   
+- name: build_hugo
+  image: klakegg/hugo:0.72.0-alpine
+  volumes:                                                                                              │
+  - name: gh-pages
+    path: /gh-pages
+  commands:
+  - echo -n "Hugo Version: "
+  - hugo version
+  - hugo --gc --minify --cleanDestinationDir -d /gh-pages
+
+- name: push_updated_website
+  image: appleboy/drone-git-push
+  settings:
+    ssh_key:
+      from_secret: CI_SSH_KEY
+    author_name: BotCI
+    author_email: bot@ci
+    remote: git@github.com:zaggash/tp-iut-docker.git
+    branch: gh-pages
+    path: /gh-pages
+    commit: true
+    commit_message: "Update Project Website"
+    force: true
+
