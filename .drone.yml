@@ -5,14 +5,14 @@ name: publish_website
 
 trigger:
   event:
-    push
+  - push
   branch:
   - master
 
-volumes:                                                                                                │
+volumes:
 - name: gh-pages
   temp: {}    
-  
+
 steps:
 - name: pull_submodules
   image: alpine/git
@@ -21,7 +21,7 @@ steps:
 
 - name: prepare_gh-pages
   image: alpine/git
-  volumes:                                                                                              │
+  volumes:
   - name: gh-pages
     path: /gh-pages
   commands:
@@ -29,16 +29,19 @@ steps:
    
 - name: build_hugo
   image: klakegg/hugo:0.72.0-alpine
-  volumes:                                                                                              │
+  volumes:
   - name: gh-pages
     path: /gh-pages
   commands:
-  - echo -n "Hugo Version: "
+  - "echo -n 'Hugo Version: '"
   - hugo version
   - hugo --gc --minify --cleanDestinationDir -d /gh-pages
 
 - name: push_updated_website
   image: appleboy/drone-git-push
+  volumes:
+  - name: gh-pages
+    path: /gh-pages
   settings:
     ssh_key:
       from_secret: CI_SSH_KEY
@@ -50,4 +53,4 @@ steps:
     commit: true
     commit_message: "Update Project Website"
     force: true
-
+    
