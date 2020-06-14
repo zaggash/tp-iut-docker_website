@@ -25,7 +25,7 @@ steps:
   - name: gh-pages
     path: /gh-pages
   commands:
-  - git clone -b gh-pages --single-branch git@github.com:zaggash/tp-iut-docker.git /gh-pages
+  - git clone -b gh-pages --single-branch https://github.com/zaggash/tp-iut-docker.git /gh-pages
    
 - name: build_hugo
   image: klakegg/hugo:0.72.0-alpine
