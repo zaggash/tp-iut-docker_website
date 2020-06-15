@@ -25,9 +25,9 @@ $ sudo apt-get update
 $ sudo apt-get upgrade -y
 $ sync && sync && sudo reboot
 ```
-Puis procéder à l'installation des paquets `bridge-utils`, `jq` et `git` qui nous serviront par la suite.
+Puis procéder à l'installation des paquets qui nous serviront par la suite.
 ```bash
-$ sudo apt-get install -y bridge-utils jq git
+$ sudo apt-get install -y bridge-utils jq git httping
 ```
 
 ### Installer Docker
