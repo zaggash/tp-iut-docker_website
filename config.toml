@@ -43,8 +43,18 @@ defaultContentLanguage = "fr"
 [outputs]
 home = [ "HTML", "RSS", "JSON"]
 
+[[menu.shortcuts]]
+name = '<i class="fas fa-book"></i> Documentation Docker'
+url = "https://docs.docker.com/"
+weight = 5
+
+
 [[menu.shortcuts]] 
-name = "<i class='fab fa-docker'></i> Docker Hub"
+name = '<i class="fab fa-docker"></i> Docker Hub'
 url = "https://hub.docker.com/"
 weight = 10
 
+[[menu.shortcuts]]
+name = '<i class="fab fa-github"></i> Dépôt du TP'
+url = "https://github.com/zaggash/tp-iut-docker"
+weight = 20

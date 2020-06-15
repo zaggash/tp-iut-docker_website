@@ -9,7 +9,7 @@ draft: false
 Lorsque l'on installe **Docker**, on installe plusieurs composants.  
 Il y a le Docker Engine et la CLI.
 
-- Le Docker Engine est un demon qui tourne an arrière plan
+- Le Docker Engine est un demon qui tourne en arrière plan
 - Les interactions avec ce daemon se font via une API REST par un Socket.
 - Sous Linux, ce socket est un socket Unix : `/var/run/docker/sock`
 - Il est également possible d'utiliser un Socket TCP avec authentification TLS.

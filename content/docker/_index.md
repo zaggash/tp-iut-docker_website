@@ -10,5 +10,5 @@ pre = "<b>2. </b>"
 
 # Docker
 
-Dans ce chapitre nous allons voir plusieurs type de conteneur.  
-Puis en apprendre un peu plus sur leurs fonctionnement.
+Dans ce chapitre nous allons voir plusieurs types de conteneur.  
+Puis en apprendre un peu plus sur leurs fonctionnements.
