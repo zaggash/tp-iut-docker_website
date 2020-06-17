@@ -82,7 +82,7 @@ Vous pouvez chercher dans la documentation de Docker pour vous familiariser avec
 ### Tips and Tricks
 
 On ne va pas trop rentrer dans les details, mais il faut savoir qu'il y a quelques bonnes habitudes à respecter lorsque l'on créé un Dockerfile.  
-En voici quelques unes pour ne pas être étonné de les voir, si vous tomber sur certain Dockerfile.  
+En voici quelques unes pour ne pas être étonné de les voir, si vous tombez sur certain Dockerfile.  
 
 - Il faut reduire le nombre de layers
 - Ne pas installer des paquets inutiles
