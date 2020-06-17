@@ -58,3 +58,8 @@ weight = 10
 name = '<i class="fab fa-github"></i> Dépôt du TP'
 url = "https://github.com/zaggash/tp-iut-docker"
 weight = 20
+
+[[menu.shortcuts]]
+name = '<i class="fab fa-linkedin"></i> Profil Linkedin'
+url = "https://www.linkedin.com/in/alexandre-pinon/"
+weight = 20
