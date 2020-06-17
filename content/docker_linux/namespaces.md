@@ -16,13 +16,13 @@ Il y a different type de namespaces:
 * ipc
 * user
 
-Les namespaces font du Kernel et sont actifs dès le démarrage de l'OS.  
+Les namespaces font partie du Kernel et sont actifs dès le démarrage de l'OS.  
 Même sans l'utilisation des conteneurs, il y a au moins un namespace de chaque type qui contient tous les processus du système.  
 
 Ils sont donc liés au système et créés grâce à deux Syscall principaux : `clone()` et `unshare()`  
 La commande `unshare` permet de faire appel à ces Syscall.  
 
-`nsenter` fait apelle au syscall `setns()` et nous permet d'inspecter les namespaces.  
+`nsenter` fait appel au syscall `setns()` et nous permet d'inspecter les namespaces.  
 
 Quand le dernier processus d'un namespace s'arrête, le namespace est detruit et toutes les ressources qui vont avec.
 
@@ -126,12 +126,18 @@ Le ***user namespace*** permet de séparer les UID/GID entre l'hôte et le names
 Cela permet d'être root dans le namespace avec un utilisateur standard de l'hôte.  
 
 ```bash
-// Notez que `unshare` est lancé sans `sudo`
-$ id
+(Dans la VM) $ id
 uid=1000(alexxx) gid=1000(alexxx) groups=1000(alexxx)
-$ unshare --user /bin/bash
-# id
+
+// Notez que `unshare` est lancé sans `sudo` //
+(Dans la VM) $ unshare --user /bin/bash
+(Dans le NS) $ id
 id=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)
+(Dans le NS) $ exit
+
+(Dans la VM) $ unshare --user -r /bin/bash
+(Dans le NS) # id
+uid=0(root) gid=0(root) groups=0(root),65534(nobody)
 ```
 
 La séparation des UID dans docker complique le partage de fichier entre conteneurs.

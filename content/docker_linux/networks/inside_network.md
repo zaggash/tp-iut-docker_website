@@ -24,7 +24,7 @@ Il existe aussi un driver multi-hôtes utilisé lors de la mise en cluster de pl
 Ce driver, appelé ***overlay*** fonctionne au travers de lien VXLAN.
 Nous reviendrons sur celui-ci un peu plus tard.
 
-### Un réseau, deux conteneurs, 
+### Un réseau, deux conteneurs 
 
 ![Single Network Diagram](/images/bridge2.png?featherlight=false&width=40pc)  
 
@@ -35,18 +35,17 @@ $ docker network create devops
 ```
 Vous pouvez le voir avec `docker network ls`  
 
-Maintenant, lancer un conteneur sur ce réseau et donné lui un **nom* reconnaissable.  
+Maintenant, lancer un conteneur sur ce réseau et donnez lui un *nom* reconnaissable.  
 ```bash
 $ docker run -d --name AppDev --net devops hashicorp/http-echo -text "Mon AppDev"
 ```
 
-Maintenant, lancer un autre conteneur dans ce même réseau  
+Maintenant, lancer un autre conteneur dans ce même réseau et lancer un ping vers votre premier conteneur `AppDev`  
 ```bash
-$ docker run -ti --net dev alpine sh
-/ #
-```
+$ docker run -ti --net devops alpine sh
+/ # ping appdev
+```  
 
-Essayer de lancer un ping vers votre premier conteneur `AppDev`  
 
 ![Magic](/images/magic.gif?featherlight=false&width=20pc)
 
@@ -114,7 +113,7 @@ $ ip a
 ```
 
 Vous pouvez voir les interfaces de la VM, le bridge docker0.  
-Puis deux interfaces **br-8be916360cbc**, **vethcbea7f9@if263** qui sont le bridge et l'interface veth coté VM.  
+Puis deux interfaces **br-8be916360cbc**, **vethcbea7f9@if263** qui sont le bridge du réseau `devops` et l'interface veth du conteneur coté VM.  
 
 On peut voir ça aussi avec `brctl`
 ```bash
@@ -125,7 +124,7 @@ docker0		        8000.02422beae43c	no
 ```
 
 ### On peut aller un peu plus loin
-Créér un deuxième réseau `prod`
+Créér un deuxième réseau `prod`  
 Lancer un conteneur dans ce réseau `prod`
 ```bash
 $ docker run -d --name AppProd hashicorp/http-echo -text "Production"
@@ -171,7 +170,7 @@ Nous allons créer une paire de Veth, puis connecter un bout au bridge `devops` 
 $ sudo ip link add name int_hote type veth peer name int_conteneur
 # On associe in_hote au bridge
 $ sudo ip link set int_hote master br-8be916360cbc up
-# On voit nos interface dans la VM
+# On voit nos interfaces dans la VM
 $ ip a | grep int
 270: int_conteneur@int_hote: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
 271: int_hote@int_conteneur: <NO-CARRIER,BROADCAST,MULTICAST,UP,M-DOWN> mtu 1500 qdisc noqueue master br-8be916360cbc state LOWERLAYERDOWN group default qlen 1000

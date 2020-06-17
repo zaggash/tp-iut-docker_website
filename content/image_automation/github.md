@@ -8,4 +8,4 @@ draft: false
 ### Pour aller plus loin...
 
 Si vous le sentez, vous pouvez créer un repo sur Gihub pour pousser votre Dockerfile créé précédemment.  
-Puis configurer un build automatique de votre Dockerfile gràace au DockerHub.
+Puis configurer un build automatique de votre Dockerfile grâce au DockerHub.
