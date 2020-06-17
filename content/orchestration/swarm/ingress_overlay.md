@@ -6,14 +6,14 @@ weight: 3
 ---
 
 {{% notice info %}}
-Pour commencer cette partie, nous allons suprimer le service `demo`  
+Pour commencer cette partie, nous allons supprimer le service `demo`  
 `docker service rm demo`  
 {{% /notice %}}
 
 ### Swarm et les Overlay
 
-Nous venons de deployer une aplication sur le cluster et l'on a vu que le port du service est disponible sur tous les noeuds.  
-Cela est possible gràce au réseau par defaut de Swarm, appelé `ingress`.  
+Nous venons de déployer une application sur le cluster et l'on a vu que le port du service est disponible sur tous les noeuds.  
+Cela est possible grâce au réseau par défaut de Swarm, appelé `ingress`.  
 ```bash
 $ docker network ls
 NETWORK ID          NAME                DRIVER              SCOPE
@@ -23,14 +23,14 @@ bfc621566968        docker_gwbridge     bridge              local
 1b6ek4sxqg9g        ingress             overlay             swarm
 797221e77f12        none                null                local
 ```
-C'est un réseau overlay installé de base, et necessaire pour les flux entrant.  
+C'est un réseau overlay installé de base, et nécessaire pour les flux entrant.  
 
 Nous pouvons de la même manière que les réseaux `bridge` qui ont un scope local, créer un réseau overlay qui à un scope au niveau du cluster.  
 ```bash
 $ docker network create --driver overlay --subnet 10.10.10.0/24 mon-overlay-demo
 ```
-Puis executer un serveur web simple exposé en dehors du cluster sur le port 8080.  
-Ce service aura 3 replicas et sera attaché à notre overlay `mon-overlay-demo`  
+Puis exécuter un serveur web simple exposé en dehors du cluster sur le port 8080.  
+Ce service aura 3 réplicas et sera attaché à notre overlay `mon-overlay-demo`  
 ```bash
 $ docker service create --name webapp --replicas=3 --network my-overlay-network -p 8080:80 zaggash/demo-webapp
 ```  
@@ -65,9 +65,9 @@ $ sudo nsenter -n -t $(pidof -s nginx)
 On voit qu'il y en a 3, au lieu de une comme lorsque l'on lance un conteneur hors Swarm.  
 
 Le conteneur est connecté à mon `mon-overlay-demo` au travers de eth1, comme on peux le voir avec l'IP.  
-Les autres interfaces sont connéctées à d'autres réseaux. 
+Les autres interfaces sont connectées à d'autres réseaux. 
 eth0 est le `ingress` car nous exposons un port vers l'extérieur.
-eth2 est le `docker_gwbridge`, le bridge local qui permet au contaneur de sortir du cluster.
+eth2 est le `docker_gwbridge`, le bridge local qui permet au conteneur de sortir du cluster.
 
 ```bash
 $ docker network inspect ingress | grep Subnet
@@ -78,7 +78,7 @@ $ docker network inspect docker_gwbridge | grep Subnet
 
 ### Les Overlays
 Les réseaux overlay créent un sous réseau qui peut être utilisé par les conteneurs entre plusieurs noeuds dans le cluster.  
-Les conteneurs situés sur des noeud differents peuvent echanger des paquets sur ce réseau si ils sont attaché à celui-ci.  
+Les conteneurs situés sur des noeud différents peuvent échanger des paquets sur ce réseau si ils sont attaché à celui-ci.  
 
 Par exemple, pour notre `webapp`, on voit qu'il y a un conteneur qui tourne sur chaque hôte dans notre cluster.
 On le vérifie:  
@@ -109,7 +109,7 @@ Les membres de se réseau virtuel peuvent se voir comme s'ils étaient connecté
 On identifie un réseau VXLAN par son identifiant VNI (VXLAN Network Identifier).  
 Celle-ci est codée sur 24 bits, ce qui donne 16777216 possibilités, bien plus intéressant que la limite de 4096 induite par les VLANs.  
 
-On peux le voir en prenant une trace sur les noeuds qui font partis de l'overlay.  
+On peut le voir en prenant une trace sur les noeuds qui font partis de l'overlay.  
 Regardons la capture du ping entre le conteneur de `node2` vers `node1`
 ```bash
 (node2) | $ nsenter -n -t $(pidof -s nginx)
@@ -133,10 +133,10 @@ Et à l'intérieur, on voit le paquet ICMP entre les conteneurs.
 
 ### Encryption
 Le trafic que l'on a vu ci-dessus montre que si l'on peut voir les paquets entre les noeuds, on peut voir le trafic entre les conteneurs qui passe dans l'overlay.  
-C'est pourquoi Docker à ajouté une option qui permet de crypter avec IPsec le tunnel VXLAN.  
+C'est pourquoi Docker a ajouté une option qui permet de crypter avec IPsec le tunnel VXLAN.  
 Pour cela, il faut ajouter `--opt encrypted` lors de la création du réseau.  
 
-Repétons les étapes précédentes en utilisant un overlay crypté.
+Répétons les étapes précédentes en utilisant un overlay crypté.
 
 ```bash
 (node1) | $ docker service rm webapp
@@ -171,14 +171,14 @@ listening on ens160, link-type EN10MB (Ethernet), capture size 262144 bytes
 De la même manière que les réseaux `bridge`, Docker créé une interface bridge pour chaque `overlay`.  
 Ce bridge connecte les interfaces virtuelles du tunnel pour établir les connections du tunnel VXLAN entre les hôtes.  
 Cependant, ces bridges et interfaces de tunnel VXLAN ne sont pas créés directement sur l'hôte.  
-Ils sont dans un conteneur séparé que Docker lance pour chaque reseau overlay.  
+Ils sont dans un conteneur séparé que Docker lance pour chaque réseau overlay.  
 Pour inspecter ces interfaces, nous devons utiliser nsenter pour accèder à leur namespace. 
 
 
 ![vxlan_vtep](/images/vtep_vxlan.jpg?featherlight=false&width=40pc)  
 
 
-Deja voyons les interfaces de notre conteneur, nous en avons des nouveau depuis le test du tunnel IPsec:
+Déjà voyons les interfaces de notre conteneur, nous en avons des nouveau depuis le test du tunnel IPsec:
 ```bash
 $ sudo nsenter -n -t $(pidof -s nginx) ifconfig
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
