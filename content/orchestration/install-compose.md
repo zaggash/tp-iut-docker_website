@@ -9,7 +9,8 @@ Bien que nous puissions installer Docker Compose à partir des repos officiels U
 Nous allons donc installer Docker Compose à partir du [repo github de Docker Compose](https://github.com/docker/compose).  
 Le site de Docker propose [une documentation pour l\'installation](https://docs.docker.com/compose/install/#install-compose-on-linux-systems).  
 ```bash
-$ sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose  
+$ latest=$(curl -sL "https://api.github.com/repos/docker/compose/releases/latest" |\jq -r '.tag_name')  
+$ sudo curl -L "https://github.com/docker/compose/releases/download/$latest/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose  
 $ sudo chmod +x /usr/local/bin/docker-compose  
 $ docker-compose --version
 ```
