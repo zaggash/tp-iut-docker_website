@@ -157,7 +157,7 @@ On a donc AppDev : 172.20.0.2/16
 et AppProd : 172.24.0.2/16
 
 {{% notice warning %}}
-Essayer de pinger AppProd à partir de AppDev.
+Essayer de pinger AppProd à partir du *namespace réseau* de AppDev (`--net container:AppDev`) avec un conteneur alpine.  
 Que se passe t-il ?
 {{% /notice %}}
 
@@ -232,7 +232,7 @@ root@69421ba25609:~# ip route add default via 172.20.0.1
 ```
 
 {{% notice warning %}}
-Essayer maintenant de nouveau de pinger AppProd à partir de AppDev.  
+Essayer maintenant à nouveau de pinger AppProd à partir de AppDev.  
 Connectez vous au namespace avec nsenter pour jouer avec ;)
 Que se passe t-il ?
 {{% /notice %}}
